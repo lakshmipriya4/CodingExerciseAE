@@ -15,6 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HiringViewModel @Inject constructor(private val repository: HiringRepository): ViewModel() {
     var hiringList = MutableLiveData<List<Hiring>>()
+    var errorMessage = MutableLiveData<String>()
+
     init {
         fetchHiringList()
     }
@@ -23,7 +25,9 @@ class HiringViewModel @Inject constructor(private val repository: HiringReposito
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getHiringList()
             if (response.isSuccessful) {
-                hiringList.postValue(response.body())
+                hiringList.postValue(response.body()?.filter { !it.name.isNullOrBlank() })
+            } else {
+                errorMessage.postValue("Failed to get response")
             }
         }
     }
