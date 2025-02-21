@@ -1,4 +1,7 @@
 package com.example.codingexerciseae.model
 
-class Hiring {
-}
+data class Hiring(
+    val id : Int,
+    val listId: Int,
+    val name: String
+)
